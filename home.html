@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Groopit - קבוצות קנייה</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      direction: rtl;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #4a90e2;
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+    }
+    .container {
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    .nav-tabs button {
+      padding: 10px;
+      margin: 5px;
+      background-color: #ddd;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .nav-tabs button:hover {
+      background-color: #ccc;
+    }
+    .group-card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin: 15px auto;
+      width: 90%;
+      max-width: 400px;
+      text-align: right;
+    }
+    .group-card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .price-box {
+      background: #e3ffe3;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>Groopit - קבוצות קנייה</header>
+  <div class="container">
+    <input type="text" id="searchInput" placeholder="חפש מוצר...">
+    <button onclick="searchProduct()">חפש</button>
+
+    <div class="nav-tabs">
+      <button onclick="showMyGroups()">הקבוצות שלי</button>
+      <button onclick="showHotGroups()">קבוצות חמות</button>
+      <button onclick="showSupplierArea()">אני ספק</button>
+    </div>
+
+    <div id="groupsContainer"></div>
+    <div id="supplierArea" style="display:none;"></div>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

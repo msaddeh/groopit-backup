@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      background: linear-gradient(120deg, #1f1c2c, #928dab);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      text-align: center;
+      padding: 50px;
+      direction: rtl;
+    }
+  
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #ffdd57;
+    }
+  
+    p {
+      margin-bottom: 30px;
+      font-size: 1.2em;
+    }
+  
+    input[type="email"],
+    input[type="password"] {
+      padding: 12px;
+      width: 300px;
+      margin: 10px auto;
+      display: block;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 1em;
+    }
+  
+    button {
+      padding: 12px 30px;
+      font-size: 1.1em;
+      background: #ffdd57;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+  
+    button:hover {
+      background: #ffe88f;
+    }
+  
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #aaffaa;
+    }
+  </style>
+  
+  <title>Groopit - הרשמה</title>
+</head>
+<body>
+  <h1>הרשמה ל־Groopit</h1>
+
+  <label for="email">אימייל:</label><br>
+  <input type="email" id="email" placeholder="example@gmail.com"><br><br>
+
+  <label for="password">סיסמה:</label><br>
+  <input type="password" id="password" placeholder="הקלד סיסמה"><br><br>
+
+  <button onclick="signUp()">הירשם</button>
+
+  <p id="status"></p>
+  
+  <hr><br>
+<h2>התחברות למשתמש קיים</h2>
+
+<label for="login-email">אימייל:</label><br>
+<input type="email" id="login-email" placeholder="example@gmail.com"><br><br>
+
+<label for="login-password">סיסמה:</label><br>
+<input type="password" id="login-password" placeholder="הקלד סיסמה"><br><br>
+
+<button onclick="logIn()">התחבר</button>
+
+<p id="login-status"></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJgKR4sLl9-TP9ralxMFy-_mJcNEsryX0",
+      authDomain: "groopit-fc12a.firebaseapp.com",
+      projectId: "groopit-fc12a",
+      storageBucket: "groopit-fc12a.appspot.com",
+      messagingSenderId: "321458941138",
+      appId: "1:321458941138:web:2d6f8be69420a59d63110b",
+      measurementId: "G-CT2LZZGMSY"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.signUp = async function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const status = document.getElementById("status");
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        status.innerText = "נרשמת בהצלחה!";
+        console.log("User created:", userCredential.user);
+        window.location.href = "home.html";
+      } catch (error) {
+        status.innerText = "שגיאה: " + error.message;
+        console.error("Registration error:", error);
+      }
+    }
+    window.logIn = async function () {
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-password").value;
+  const status = document.getElementById("login-status");
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    status.innerText = "התחברת בהצלחה!";
+    console.log("User logged in:", userCredential.user);
+    window.location.href = "home.html";
+  } catch (error) {
+    status.innerText = "שגיאה: " + error.message;
+    console.error("Login error:", error);
+  }
+};
+
+  </script>
+</body>
+</html>

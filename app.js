@@ -17,7 +17,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
-const unsplashAccessKey = "PRZUazd2F0SKhYH-4f6gVS3pseMhAVzx9FuY_itR5Ig";
+
+const googleApiKey = "AIzaSyCMfiMFgn_M_SkM9hfYn6fWytJk2_Q2TXI";
+const searchEngineId = "635dfc4bee33c4c70";
 
 let currentUser = null;
 onAuthStateChanged(auth, (user) => {
@@ -47,13 +49,19 @@ async function searchProduct() {
   }
 }
 
-async function fetchUnsplashImage(query) {
+async function fetchProductImage(query) {
+  const url = `https://www.googleapis.com/customsearch/v1?key=${googleApiKey}&cx=${searchEngineId}&searchType=image&q=${encodeURIComponent(query)}`;
+
   try {
-    const response = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&client_id=${unsplashAccessKey}`);
-    const data = await response.json();
-    return data.results?.[0]?.urls?.regular || null;
-  } catch (error) {
-    console.error("שגיאה מ־Unsplash:", error);
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.error) {
+      console.error("שגיאה מה-API של גוגל:", data.error);
+      return null;
+    }
+    return data.items?.[0]?.link || null;
+  } catch (err) {
+    console.error("שגיאה בחיפוש תמונה בגוגל:", err);
     return null;
   }
 }
@@ -64,7 +72,7 @@ async function displayGroups(groupDocs) {
 
   for (const docSnap of groupDocs) {
     const group = docSnap.data();
-    const imageUrl = await fetchUnsplashImage(group.name);
+    const imageUrl = await fetchProductImage(group.name);
     const bestOffer = group.offers?.reduce((min, offer) => parseFloat(offer.price) < parseFloat(min.price) ? offer : min, group.offers?.[0]) || null;
 
     const card = document.createElement("div");
@@ -184,3 +192,28 @@ window.showHotGroups = showHotGroups;
 window.showSupplierArea = showSupplierArea;
 window.joinGroup = joinGroup;
 window.leaveGroup = leaveGroup;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const navTabs = document.querySelector('.nav-tabs');
+  if (navTabs) {
+    navTabs.style.display = 'flex';
+    navTabs.style.justifyContent = 'center';
+    navTabs.style.flexWrap = 'wrap';
+    navTabs.style.marginTop = '20px';
+  }
+
+  const searchInput = document.getElementById('searchInput');
+  const searchButton = document.querySelector('button[onclick="searchProduct()"]');
+  const parent = searchInput?.parentElement;
+
+  if (searchInput && searchButton && parent) {
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'flex';
+    wrapper.style.justifyContent = 'center';
+    wrapper.style.gap = '10px';
+    wrapper.style.marginTop = '20px';
+    parent.insertBefore(wrapper, searchInput);
+    wrapper.appendChild(searchInput);
+    wrapper.appendChild(searchButton);
+  }
+});

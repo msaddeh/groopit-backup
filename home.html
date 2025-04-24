@@ -21,15 +21,30 @@
     }
     .container {
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .search-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 15px 0;
     }
     input, button {
       padding: 10px;
       font-size: 16px;
-      margin: 10px 5px;
+    }
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
     }
     .nav-tabs button {
       padding: 10px;
-      margin: 5px;
       background-color: #ddd;
       border: none;
       border-radius: 5px;
@@ -65,8 +80,10 @@
 <body>
   <header>Groopit - קבוצות קנייה</header>
   <div class="container">
-    <input type="text" id="searchInput" placeholder="חפש מוצר...">
-    <button onclick="searchProduct()">חפש</button>
+    <div class="search-wrapper">
+      <input type="text" id="searchInput" placeholder="חפש מוצר...">
+      <button onclick="searchProduct()">חפש</button>
+    </div>
 
     <div class="nav-tabs">
       <button onclick="showMyGroups()">הקבוצות שלי</button>

@@ -18,6 +18,19 @@
       text-align: center;
       color: white;
       font-size: 24px;
+      position: relative;
+    }
+    #userBalance {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #ffffff;
+      color: #4a90e2;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      font-size: 16px;
     }
     .container {
       padding: 20px;
@@ -75,10 +88,49 @@
       margin-top: 10px;
       font-weight: bold;
     }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #4a90e2;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spinInfinity 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spinInfinity {
+      0% { transform: rotate(0deg) scaleX(1) scaleY(1); }
+      50% { transform: rotate(180deg) scaleX(1.5) scaleY(0.7); }
+      100% { transform: rotate(360deg) scaleX(1) scaleY(1); }
+    }
+    #durationPopup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #durationPopupContent {
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    #durationPopupContent button {
+      margin: 5px;
+    }
   </style>
 </head>
 <body>
-  <header>Groopit - קבוצות קנייה</header>
+  <header>
+    Groopit - קבוצות קנייה
+    <div id="userBalance">₪10,000</div>
+  </header>
   <div class="container">
     <div class="search-wrapper">
       <input type="text" id="searchInput" placeholder="חפש מוצר...">
@@ -88,12 +140,28 @@
     <div class="nav-tabs">
       <button onclick="showMyGroups()">הקבוצות שלי</button>
       <button onclick="showHotGroups()">קבוצות חמות</button>
+      <button onclick="showAIHotGroups()">קבוצות חמות AI</button>
       <button onclick="showSupplierArea()">אני ספק</button>
     </div>
 
+    <div id="aiLoader" class="loader" style="display:none;"></div>
     <div id="groupsContainer"></div>
     <div id="supplierArea" style="display:none;"></div>
   </div>
+
+  <div id="durationPopup">
+    <div id="durationPopupContent">
+      <h2>בחר משך זמן לקבוצה</h2>
+      <button onclick="selectDuration('15s')">15 שניות</button>
+      <button onclick="selectDuration('30s')">30 שניות</button>
+      <button onclick="selectDuration('60s')">60 שניות</button>
+      <button onclick="selectDuration('10h')">10 שעות</button>
+      <button onclick="selectDuration('24h')">24 שעות</button>
+      <br><br>
+      <button onclick="closeDurationPopup()">ביטול</button>
+    </div>
+  </div>
+
   <script type="module" src="app.js"></script>
 </body>
 </html>

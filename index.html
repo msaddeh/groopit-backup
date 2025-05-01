@@ -2,31 +2,33 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Groopit - התחברות</title>
   <style>
     body {
-      background: linear-gradient(120deg, #1f1c2c, #928dab);
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      direction: rtl;
+      background: url('6b1ea654-930b-4225-8228-110a788ee739.png') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
       color: white;
       text-align: center;
-      padding: 50px;
-      direction: rtl;
     }
-  
-    h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
+    .container {
+      padding: 50px;
+      background-color: rgba(0, 0, 0, 0.6);
+      max-width: 500px;
+      margin: auto;
+      margin-top: 10vh;
+      border-radius: 15px;
+    }
+    h1, h2 {
       color: #ffdd57;
     }
-  
-    p {
-      margin-bottom: 30px;
-      font-size: 1.2em;
-    }
-  
-    input[type="email"],
-    input[type="password"] {
+    input[type="email"], input[type="password"] {
       padding: 12px;
-      width: 300px;
+      width: 90%;
       margin: 10px auto;
       display: block;
       border-radius: 10px;
@@ -34,8 +36,7 @@
       outline: none;
       font-size: 1em;
     }
-  
-    button {
+    button, select {
       padding: 12px 30px;
       font-size: 1.1em;
       background: #ffdd57;
@@ -44,46 +45,53 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background 0.3s ease;
+      margin-top: 10px;
     }
-  
     button:hover {
       background: #ffe88f;
     }
-  
-    #status {
+    #status, #login-status {
       margin-top: 20px;
       font-weight: bold;
       color: #aaffaa;
     }
   </style>
-  
-  <title>Groopit - הרשמה</title>
 </head>
 <body>
-  <h1>הרשמה ל־Groopit</h1>
+  <div class="container">
+    <h2>התחברות למשתמש קיים</h2>
+    <label for="login-email">אימייל:</label>
+    <input type="email" id="login-email" placeholder="example@gmail.com">
 
-  <label for="email">אימייל:</label><br>
-  <input type="email" id="email" placeholder="example@gmail.com"><br><br>
+    <label for="login-password">סיסמה:</label>
+    <input type="password" id="login-password" placeholder="הקלד סיסמה">
 
-  <label for="password">סיסמה:</label><br>
-  <input type="password" id="password" placeholder="הקלד סיסמה"><br><br>
+    <label for="login-role">בחר תפקיד:</label>
+    <select id="login-role">
+      <option value="user">לקוח</option>
+      <option value="supplier">ספק</option>
+    </select>
 
-  <button onclick="signUp()">הירשם</button>
+    <button onclick="logIn()">התחבר</button>
+    <p id="login-status"></p>
 
-  <p id="status"></p>
-  
-  <hr><br>
-<h2>התחברות למשתמש קיים</h2>
+    <hr><br>
+    <h1>הרשמה ל־Groopit</h1>
+    <label for="email">אימייל:</label>
+    <input type="email" id="email" placeholder="example@gmail.com">
 
-<label for="login-email">אימייל:</label><br>
-<input type="email" id="login-email" placeholder="example@gmail.com"><br><br>
+    <label for="password">סיסמה:</label>
+    <input type="password" id="password" placeholder="הקלד סיסמה">
 
-<label for="login-password">סיסמה:</label><br>
-<input type="password" id="login-password" placeholder="הקלד סיסמה"><br><br>
+    <label for="signup-role">בחר תפקיד:</label>
+    <select id="signup-role">
+      <option value="user">לקוח</option>
+      <option value="supplier">ספק</option>
+    </select>
 
-<button onclick="logIn()">התחבר</button>
-
-<p id="login-status"></p>
+    <button onclick="signUp()">הירשם</button>
+    <p id="status"></p>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
@@ -105,34 +113,34 @@
     window.signUp = async function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+      const role = document.getElementById("signup-role").value;
       const status = document.getElementById("status");
-
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         status.innerText = "נרשמת בהצלחה!";
-        console.log("User created:", userCredential.user);
-        window.location.href = "home.html";
+        const dest = role === "supplier" ? "supplier-home.html" : "home.html";
+
+        window.location.href = dest;
       } catch (error) {
         status.innerText = "שגיאה: " + error.message;
-        console.error("Registration error:", error);
       }
     }
+
     window.logIn = async function () {
-  const email = document.getElementById("login-email").value;
-  const password = document.getElementById("login-password").value;
-  const status = document.getElementById("login-status");
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      const role = document.getElementById("login-role").value;
+      const status = document.getElementById("login-status");
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        status.innerText = "התחברת בהצלחה!";
+        const dest = role === "supplier" ? "supplier-home.html" : "home.html";
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    status.innerText = "התחברת בהצלחה!";
-    console.log("User logged in:", userCredential.user);
-    window.location.href = "home.html";
-  } catch (error) {
-    status.innerText = "שגיאה: " + error.message;
-    console.error("Login error:", error);
-  }
-};
-
+        window.location.href = dest;
+      } catch (error) {
+        status.innerText = "שגיאה: " + error.message;
+      }
+    }
   </script>
 </body>
 </html>

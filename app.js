@@ -21,6 +21,28 @@ const auth = getAuth();
 let currentUser = null;
 let userBalance = 10000;
 
+let selectedGroupId = null;
+let selectedProductName = null;
+let selectedPrice = null;
+
+function openDurationPopup(groupId, productName, price) {
+  selectedGroupId = groupId;
+  selectedProductName = productName;
+  selectedPrice = price;
+  document.getElementById("durationPopup").style.display = "flex";
+}
+
+function selectDuration(durationStr) {
+  const popup = document.getElementById("durationPopup");
+  popup.style.display = "none";
+  let millis = 15000;
+  if (durationStr === "30s") millis = 30000;
+  else if (durationStr === "60s") millis = 60000;
+  else if (durationStr === "10h") millis = 10 * 60 * 60 * 1000;
+  else if (durationStr === "24h") millis = 24 * 60 * 60 * 1000;
+  joinGroup(selectedGroupId, selectedProductName, selectedPrice, millis);
+}
+
 onAuthStateChanged(auth, async (user) => {
   currentUser = user || null;
   if (currentUser) {
@@ -96,7 +118,7 @@ async function displayGroups(groupDocs) {
       ${imageUrl ? `<img src="${imageUrl}" alt="${group.name}">` : ""}
       ${alreadyJoined ?
         `<button onclick="leaveGroup('${docSnap.id}')">עזוב קבוצה</button>` :
-        `<button onclick="chooseDurationAndJoin('${docSnap.id}', '${group.name}', ${bestOffer ? bestOffer.price : 50})">הצטרף לקבוצה</button>`
+        `<button onclick="openDurationPopup('${docSnap.id}', '${group.name}', ${bestOffer ? bestOffer.price : 50})">הצטרף לקבוצה</button>`
       }
     `;
     container.appendChild(card);
@@ -223,6 +245,8 @@ window.showAIHotGroups = showAIHotGroups;
 window.showSupplierArea = showSupplierArea;
 window.chooseDurationAndJoin = chooseDurationAndJoin;
 window.leaveGroup = leaveGroup;
+window.openDurationPopup = openDurationPopup;
+window.selectDuration = selectDuration;
 
 window.addEventListener('DOMContentLoaded', updateUserBalanceDisplay);
 

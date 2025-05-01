@@ -36,7 +36,7 @@
       outline: none;
       font-size: 1em;
     }
-    button {
+    button, select {
       padding: 12px 30px;
       font-size: 1.1em;
       background: #ffdd57;
@@ -45,6 +45,7 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background 0.3s ease;
+      margin-top: 10px;
     }
     button:hover {
       background: #ffe88f;
@@ -65,6 +66,12 @@
     <label for="login-password">סיסמה:</label>
     <input type="password" id="login-password" placeholder="הקלד סיסמה">
 
+    <label for="login-role">בחר תפקיד:</label>
+    <select id="login-role">
+      <option value="user">לקוח</option>
+      <option value="supplier">ספק</option>
+    </select>
+
     <button onclick="logIn()">התחבר</button>
     <p id="login-status"></p>
 
@@ -75,6 +82,12 @@
 
     <label for="password">סיסמה:</label>
     <input type="password" id="password" placeholder="הקלד סיסמה">
+
+    <label for="signup-role">בחר תפקיד:</label>
+    <select id="signup-role">
+      <option value="user">לקוח</option>
+      <option value="supplier">ספק</option>
+    </select>
 
     <button onclick="signUp()">הירשם</button>
     <p id="status"></p>
@@ -100,11 +113,14 @@
     window.signUp = async function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+      const role = document.getElementById("signup-role").value;
       const status = document.getElementById("status");
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         status.innerText = "נרשמת בהצלחה!";
-        window.location.href = "home.html";
+        const dest = role === "supplier" ? "supplier-home.html" : "home.html";
+
+        window.location.href = dest;
       } catch (error) {
         status.innerText = "שגיאה: " + error.message;
       }
@@ -113,11 +129,14 @@
     window.logIn = async function () {
       const email = document.getElementById("login-email").value;
       const password = document.getElementById("login-password").value;
+      const role = document.getElementById("login-role").value;
       const status = document.getElementById("login-status");
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         status.innerText = "התחברת בהצלחה!";
-        window.location.href = "home.html";
+        const dest = role === "supplier" ? "supplier-home.html" : "home.html";
+
+        window.location.href = dest;
       } catch (error) {
         status.innerText = "שגיאה: " + error.message;
       }
